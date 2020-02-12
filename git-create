@@ -1,0 +1,47 @@
+#!/bin/bash
+
+username=
+token=
+repo_name=$1
+private_state="$2"
+private=true
+if [[ "$private_state" == p ]]
+then
+	private=false
+fi
+
+
+test -z $repo_name && echo "Repo name required." 1>&2 && exit 1
+
+curl -u $username:$token https://api.github.com/user/repos -d "{\"name\":\"$repo_name\",\"private\": $private}"
+
+if [[ ${PWD##*/} != $repo_name ]]
+then 
+	git init $repo_name
+	cd $repo_name
+else
+	git init
+fi
+
+git remote add origin "https://github.com/$username/$repo_name.git"
+
+rdm=README.md
+ginr=.gitignore
+if [[ "$(ls)" != *"$rdm"* ]]
+then
+	echo \#' '$repo_name > README.md
+fi
+if [[ "$(ls)" != *"$ginr"* ]]
+then
+	touch .gitignore             
+fi
+
+git add .
+
+git commit -m "First commit"
+
+git status
+
+echo "This repo is private: "$private
+
+git push --set-upstream origin master
