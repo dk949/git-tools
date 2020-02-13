@@ -10,7 +10,8 @@ then
 	private=false
 fi
 
-
+test -z $username && echo "No username specified, run the config file." 1>&2 && exit 1
+test -z $token && echo "No Token. I dont know how this happened, run the config to fix." 1>&2 && exit 1
 test -z $repo_name && echo "Repo name required." 1>&2 && exit 1
 
 curl -u $username:$token https://api.github.com/user/repos -d "{\"name\":\"$repo_name\",\"private\": $private}"
