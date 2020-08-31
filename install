@@ -2,4 +2,4 @@
 CURRENT=$PWD
 cd ~/bin
 rm git-*
-ln -s $(ls $CURRENT/* | awk '!/README.md|install/') .
+ln -s $(ls $CURRENT/* | awk '!/README.md|install|\.git/') .
