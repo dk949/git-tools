@@ -1,0 +1,5 @@
+#!/bin/sh
+CURRENT=$PWD
+cd ~/bin
+rm git-*
+ln -s $(ls $CURRENT/* | awk '!/README.md|install/') .

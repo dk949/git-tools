@@ -1,0 +1,5 @@
+#!/bin/bash
+MODULE=$1
+awk  "!/url.*${MODULE}|path.*${MODULE}|submod.*${MODULE}/{print $2}" .gitmodules || echo "No ,gitmodules found, exiting..." && exit
+git add .gitsubmodules
+# TODO: Finish this, im going to bed

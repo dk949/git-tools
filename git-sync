@@ -1,0 +1,132 @@
+#!/bin/sh
+
+# A POSIX variable
+OPTIND=1         # Reset in case getopts has been used previously in the shell.
+
+# Initialize our own variables:
+verbose=0
+silent=0
+message=""
+push=1
+all=0
+success_str="Sync complete. "
+file_list=""
+show_help() {
+	echo "Here be help"
+}
+
+while getopts "Amlvhs:" opt; do
+    case "$opt" in
+    h)
+        show_help
+        exit 0
+        ;;
+    v)  verbose=1
+        ;;
+    A)  all=1
+        ;;
+    s) silent=1
+	;;
+    m)
+	message=$OPTARG
+	echo "Got this far"
+	echo $message
+	;;
+    l) push=0
+	;;
+    *) 
+        echo "invalid flag run git sync -h for help"
+    esac
+done
+
+
+shift $((OPTIND-1))
+
+[ "${1:-}" = "--" ] && shift
+
+if [ $all = 0 ]
+then
+	if [ "$*" = "" ]
+	then
+		echo No files specified. Specify files to sync or sync all files with -A
+		exit 0
+	else
+	      file_list="$*"
+	fi
+fi
+
+do_the_sync_verbose() {
+
+if [ $all = 1 ]
+then
+	git add -A
+	success_str=$success_str "All files were added." 
+else
+	git add "$file_list"
+	success_str=$success_str "$file_list" "were added." 
+
+fi
+
+
+if [ ! $message = "" ]
+then
+	git commit -m "$message"
+	success_str="$success_str Added files were commited. "
+else
+	git commit
+	success_str="$success_str Added files were commited. "
+fi
+
+
+if [ $push = 1 ]
+then
+	git push
+	success_str="$success_str The commit was pushed to the remote."
+fi
+
+echo "$success_str"
+
+}
+
+do_the_sync_silent() {
+
+if [ $all = 1 ]
+then
+	git add -A 2> /dev/null
+	success_str="$success_str All files were added. "
+else
+	git add "$file_list" 2> /dev/null
+	success_str=$success_str "$file_list were added. "
+fi
+
+
+if [ ! $message = "" ]
+then
+	git commit -m "$message" 2> /dev/null
+	success_str="$success_str Added files were commited. "
+else
+	git commit
+	success_str="$success_str Added files were commited. "
+fi
+
+
+if [ $push = 1 ]
+then
+	git push 2> /dev/null
+	success_str="$success_str The commit was pushed to the remote."
+fi
+
+if [ $silent = 0 ]
+then
+	echo "$success_str"
+fi
+
+}
+
+if [ $verbose = 1 ]
+then
+    do_the_sync_verbose "$verbose" "$silent" "$message" "$has_message" "$push" "$all" "$success_str" "$file_list"
+else
+    do_the_sync_silent "$verbose" "$silent" "$message" "$has_message" "$push" "$all" "$success_str" "$file_list"
+fi
+
