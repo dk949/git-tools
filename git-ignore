@@ -1,2 +1,12 @@
-#!/bin/bash
-echo "$1" >> ./.gitignore
+#!/bin/sh
+failMsg() {
+    echo -e "fatal: not a git repository (or any parent up to mount point \/)\nStopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set)."
+    exit 1
+}
+
+CURRENT=$PWD
+GIT="$(git rev-parse --git-dir 2> /dev/null)" || failMsg
+GIT=$(cd "$GIT/.."; pwd)
+cd $GIT
+echo ${CURRENT##$GIT/}/$1 >> ./.gitignore
+cd $CURRENT
