@@ -16,7 +16,7 @@
 #       -f and --file lists the files to be syncen
 #       -m and --message is the same as git commit -m, it stores the commit message
 #       -p and --push is push to a remote fter commiting (this behaviour is default)
-#       -n and no-push is the opposit of push and keeps the commit local
+#       no-push is the opposit of push and keeps the commit local
 #       -y and --yes is equivalent to git sync -A -p -m "Modified $files"
 
 
@@ -37,8 +37,8 @@ if echo "$*" | grep -Eq ".*\-A.*\-f.*|.*\-f.*\-A.*"; then
     exit 1
 fi
 
-if echo "$*" | grep -Eq ".*\-p.*\-n.*|.*\-n.*\-p.*"; then
-    echo "-p and -n are incompatibe"
+if echo "$*" | grep -Eq ".*\-p.*\--no-push.*|.*\--no-push.*\-p.*"; then
+    echo "-p and --no-push are incompatibe"
     exit 1
 fi
 
@@ -67,13 +67,11 @@ while [ -n "$1" ]; do # loop over all arguments
 
 
         -A|--all)
-            if [ -n "$2" ] && [ "$(echo "$2" | cut -c1-1)" != "-" ]; then # if -A ws not the only option terminate the program
+            if [ -n "$2" ] && [ "$(echo "$2" | cut -c1)" != "-" ]; then # if -A was given options terminate program
+
                 echo "-A does not take options"
                 exit 1
             fi
-
-            echo "-A option passed"
-
             ;;
 
         -f|--file)
@@ -83,11 +81,10 @@ while [ -n "$1" ]; do # loop over all arguments
             fi
 
             while [ -n "$2" ] && [ "$(echo "$2" | cut -c1-1)" != "-" ]; do # a secondary arg collection loop
-                files="$files $2" # collecting all filenames after -f
+                files="$2 $files " # collecting all filenames after -f
                 shift
             done
-            echo "$files"
-
+            files="$(echo "$files" | cut -c1-)"
             ;;
 
         -m|--message)
@@ -103,9 +100,7 @@ while [ -n "$1" ]; do # loop over all arguments
             fi
 
             message="$2"
-            echo "-m option passed with message \"$message\""
             shift
-
             ;;
 
         -p|--push)
@@ -116,21 +111,17 @@ while [ -n "$1" ]; do # loop over all arguments
                     exit 1
                 fi
             fi
-
-            echo "-p option passed"
             push=1
             ;;
 
-        -n|--no-push)
+        --no-push)
             # also like -A
             if [ -n "$2" ]; then
                 if [ "$(echo "$2" | cut -c1-1)" != "-" ]; then
-                    echo "-n does not take options"
+                    echo "--no-push does not take options"
                     exit 1
                 fi
             fi
-
-            echo "-n option passed"
             push=0
             ;;
 
@@ -140,8 +131,9 @@ while [ -n "$1" ]; do # loop over all arguments
                 echo "-y does not take options and is incompatible with other flags"
                 exit 1
             fi
-            echo "-y option passed"
 
+            message="Synchronizing all files"
+            push=1
             ;;
 
         *)
@@ -157,25 +149,21 @@ while [ -n "$1" ]; do # loop over all arguments
 
 done
 
-addStage() {
-    if [ -n "$files" ]; then
-        git add "$files"
-    else
-        git add .
-    fi
-}
 
-commitStage() {
-    if [ -n "$message" ]; then
-        git commit -m "$message"
-    else
-        git commit
-    fi
-}
+if [ -n "$files" ]; then
+    git add "$files"
+else
+    git add .
+fi
 
-pushStage() {
-    if [ $push -gt 0 ]; then
-        git push
-    fi
-}
 
+if [ -n "$message" ]; then
+    git commit -m "$message"
+else
+    git commit
+fi
+
+
+if [ $push -gt 0 ]; then
+    git push
+fi
