@@ -20,72 +20,71 @@
 #       -y and --yes is equivalent to git sync -A -p -m "Modified $files"
 
 
-
-
-
-
-message=""
+# Variables set by the flags
 files=""
+file=0
+message=""
+push=1
 
-
-
-
-
-
-
+# Script always requires some options
 if [ -z "$1" ]; then
-    echo "Usage will be here later"
+    echo "TODO: usage"
     exit 1
 fi
 
-while [ -n "$1" ]; do # while loop starts
+# checking incompatible argumanets
+if [ -n "$(echo "$*" | grep -E ".*\-A.*\-f.*|.*\-f.*\-A.*")" ]; then
+    echo "-A and -f are incompatibe"
+    exit 1
+fi
 
-	case "$1" in
+if [ -n "$(echo "$*" | grep -E ".*\-p.*\-n.*|.*\-n.*\-p.*")" ]; then
+    echo "-p and -n are incompatibe"
+    exit 1
+fi
 
-	-h|-\?)
-            echo "-h option passed"
-            if [ -n "$2" ]; then
-                echo "-h Does not take parameters and is incompatible with other options"
+# Main argument collecting loop
+while [ -n "$1" ]; do # loop over all arguments
+
+    # Check which arg was passed
+    case "$1" in
+
+        -h|-\?)
+            if [ "$#" -ne 1 ]; then # if -h is not the only flag, terminate the program.
+                echo "-h does not take options and is incompatible with other flags"
                 exit 1
             fi
+            echo "TODO: a help message"
+            ;;
 
-            ;; # Message for -a option
 
 
-
-	-A|--all)
-            if [ -n "$2" ]; then
-                if [ "$(echo $2 | cut -c1-1)" != "-" ]; then
-                    echo "-A does not take options"
-                    exit 1
-                fi
+        -A|--all)
+            if [ -n "$2" ] && [ "$(echo $2 | cut -c1-1)" != "-" ]; then # if -A ws not the only option terminate the program
+                echo "-A does not take options"
+                exit 1
             fi
 
             echo "-A option passed"
 
+            ;;
 
-            ;; # Message for -b option
-
-	-f|--file)
-            if [ -z "$2" ]; then
+        -f|--file)
+            if [ -z "$2" ] || [ "$(echo $2 | cut -c1-1)" = "-" ]; then # if no files after -f, terminate
                 echo "-f requires a list of files"
                 exit 1
             fi
 
-            if [ "$(echo $2 | cut -c1-1)" = "-" ]; then
-                echo "-f requires a list of files"
-                exit 1
-            fi
-
-            while [ -n "$2" ] && [ "$(echo $2 | cut -c1-1)" != "-" ]; do
-                files=$(echo "$files" "$2")
+            while [ -n "$2" ] && [ "$(echo $2 | cut -c1-1)" != "-" ]; do # a secondary arg collection loop
+                files=$(echo "$files" "$2") # collecting all filenames after -f
                 shift
             done
             echo "$files"
 
-            ;; # Message for -c option
+            ;;
 
-	-m|--message)
+        -m|--message)
+            # line -f but without the secondary loop, only collecting one arg after -m
             if [ -z "$2" ]; then
                 echo "-m requires a message"
                 exit 1
@@ -100,9 +99,10 @@ while [ -n "$1" ]; do # while loop starts
             echo "-m option passed with message \"$message\""
             shift
 
-            ;; # Message for -c option
+            ;;
 
-	-p|--push)
+        -p|--push)
+            # just like -A
             if [ -n "$2" ]; then
                 if [ "$(echo $2 | cut -c1-1)" != "-" ]; then
                     echo "-p does not take options"
@@ -112,9 +112,10 @@ while [ -n "$1" ]; do # while loop starts
 
             echo "-p option passed"
 
-            ;; # Message for -c option
+            ;;
 
-	-n|--no-push)
+        -n|--no-push)
+            # also like -A
             if [ -n "$2" ]; then
                 if [ "$(echo $2 | cut -c1-1)" != "-" ]; then
                     echo "-n does not take options"
@@ -123,26 +124,32 @@ while [ -n "$1" ]; do # while loop starts
             fi
 
             echo "-n option passed"
-            ;; # Message for -c option
+            ;;
 
-	-y|--yes)
-            if [ -n "$2" ]; then
-                if [ "$(echo $2 | cut -c1-1)" != "-" ]; then
-                    echo "-y does not take options"
-                    exit 1
-                fi
+        -y|--yes)
+            # same as -h
+            if [ "$argNum" -ne 1 ];then
+                echo "-y does not take options and is incompatible with other flags"
+                exit 1
             fi
             echo "-y option passed"
 
-            ;; # Message for -c option
+            ;;
 
-	*)
+        *)
+            # if none of the above matched
             echo "Option $1 not recognized"
+            exit 1
+            ;;
 
-            ;; # Unknown option found
-
-	esac
-
-	shift
+    esac
+    # move to the next argument
+    shift
 
 done
+
+addStage() {
+    git add
+}
+
+
