@@ -32,19 +32,19 @@ if [ -z "$1" ]; then
 fi
 
 # checking incompatible argumanets
-if [ -n "$(echo "$*" | grep -E ".*\-A.*\-f.*|.*\-f.*\-A.*")" ]; then
+if echo "$*" | grep -Eq ".*\-A.*\-f.*|.*\-f.*\-A.*"; then
     echo "-A and -f are incompatibe"
     exit 1
 fi
 
-if [ -n "$(echo "$*" | grep -E ".*\-p.*\-n.*|.*\-n.*\-p.*")" ]; then
+if echo "$*" | grep -Eq ".*\-p.*\-n.*|.*\-n.*\-p.*"; then
     echo "-p and -n are incompatibe"
     exit 1
 fi
 
 
 # checking required arguments
-if [ -z "$(echo "$*" | grep -E ".*\-A.*|.*\-f.*|.*\-y.*|.*\-h.*")" ]; then
+if ! echo "$*" | grep -Eq ".*\-A.*|.*\-f.*|.*\-y.*|.*\-h.*"; then
     echo "required one of -A, -f, -y (only one). See $0 -h for help"
     exit 1
 fi
