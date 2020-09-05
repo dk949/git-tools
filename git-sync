@@ -22,7 +22,6 @@
 
 # Variables set by the flags
 files=""
-file=0
 message=""
 push=1
 
@@ -43,6 +42,14 @@ if [ -n "$(echo "$*" | grep -E ".*\-p.*\-n.*|.*\-n.*\-p.*")" ]; then
     exit 1
 fi
 
+
+# checking required arguments
+if [ -z "$(echo "$*" | grep -E ".*\-A.*|.*\-f.*|.*\-y.*|.*\-h.*")" ]; then
+    echo "required one of -A, -f, -y (only one). See $0 -h for help"
+    exit 1
+fi
+
+
 # Main argument collecting loop
 while [ -n "$1" ]; do # loop over all arguments
 
@@ -60,7 +67,7 @@ while [ -n "$1" ]; do # loop over all arguments
 
 
         -A|--all)
-            if [ -n "$2" ] && [ "$(echo $2 | cut -c1-1)" != "-" ]; then # if -A ws not the only option terminate the program
+            if [ -n "$2" ] && [ "$(echo "$2" | cut -c1-1)" != "-" ]; then # if -A ws not the only option terminate the program
                 echo "-A does not take options"
                 exit 1
             fi
@@ -70,13 +77,13 @@ while [ -n "$1" ]; do # loop over all arguments
             ;;
 
         -f|--file)
-            if [ -z "$2" ] || [ "$(echo $2 | cut -c1-1)" = "-" ]; then # if no files after -f, terminate
+            if [ -z "$2" ] || [ "$(echo "$2" | cut -c1-1)" = "-" ]; then # if no files after -f, terminate
                 echo "-f requires a list of files"
                 exit 1
             fi
 
-            while [ -n "$2" ] && [ "$(echo $2 | cut -c1-1)" != "-" ]; do # a secondary arg collection loop
-                files=$(echo "$files" "$2") # collecting all filenames after -f
+            while [ -n "$2" ] && [ "$(echo "$2" | cut -c1-1)" != "-" ]; do # a secondary arg collection loop
+                files="$files $2" # collecting all filenames after -f
                 shift
             done
             echo "$files"
@@ -90,7 +97,7 @@ while [ -n "$1" ]; do # loop over all arguments
                 exit 1
             fi
 
-            if [ "$(echo $2 | cut -c1-1)" = "-" ]; then
+            if [ "$(echo "$2" | cut -c1-1)" = "-" ]; then
                 echo "-m requires a message"
                 exit 1
             fi
@@ -104,31 +111,32 @@ while [ -n "$1" ]; do # loop over all arguments
         -p|--push)
             # just like -A
             if [ -n "$2" ]; then
-                if [ "$(echo $2 | cut -c1-1)" != "-" ]; then
+                if [ "$(echo "$2" | cut -c1-1)" != "-" ]; then
                     echo "-p does not take options"
                     exit 1
                 fi
             fi
 
             echo "-p option passed"
-
+            push=1
             ;;
 
         -n|--no-push)
             # also like -A
             if [ -n "$2" ]; then
-                if [ "$(echo $2 | cut -c1-1)" != "-" ]; then
+                if [ "$(echo "$2" | cut -c1-1)" != "-" ]; then
                     echo "-n does not take options"
                     exit 1
                 fi
             fi
 
             echo "-n option passed"
+            push=0
             ;;
 
         -y|--yes)
             # same as -h
-            if [ "$argNum" -ne 1 ];then
+            if [ "$#" -ne 1 ];then
                 echo "-y does not take options and is incompatible with other flags"
                 exit 1
             fi
@@ -143,13 +151,31 @@ while [ -n "$1" ]; do # loop over all arguments
             ;;
 
     esac
+
     # move to the next argument
     shift
 
 done
 
 addStage() {
-    git add
+    if [ -n "$files" ]; then
+        git add "$files"
+    else
+        git add .
+    fi
 }
 
+commitStage() {
+    if [ -n "$message" ]; then
+        git commit -m "$message"
+    else
+        git commit
+    fi
+}
+
+pushStage() {
+    if [ $push -gt 0 ]; then
+        git push
+    fi
+}
 
