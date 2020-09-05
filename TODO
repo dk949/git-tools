@@ -1,10 +1,10 @@
 Done:
     git-ignore - to add files to the git ignore
     git-view - clear the screen and show the status
+    git-sync - add specified files, commit with a the specified message. push to the remote
 
 In progress:
     git-rmsubmodule - Remove a submodule from a project
-    git-sync - add specified files, commit with a the specified message. push to the remote
 
 TODO:
 
