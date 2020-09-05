@@ -1,5 +1,9 @@
 #!/bin/bash
-
+#TODO: This needs a rewrite at some point.
+# Change:
+#   the github api with token thing is being deprecated (I think)
+#   Needs to take options instead of the horible thing it does now
+#   Get rid of the config file
 username=
 token=
 repo_name=$1
@@ -17,7 +21,7 @@ test -z $repo_name && echo "Repo name required." 1>&2 && exit 1
 curl -u $username:$token https://api.github.com/user/repos -d "{\"name\":\"$repo_name\",\"private\": $private}"
 
 if [[ ${PWD##*/} != $repo_name ]]
-then 
+then
 	git init $repo_name
 	cd $repo_name
 else
@@ -34,7 +38,7 @@ then
 fi
 if [[ "$(ls)" != *"$ginr"* ]]
 then
-	touch .gitignore             
+	touch .gitignore
 fi
 
 git add .

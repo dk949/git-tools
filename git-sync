@@ -1,132 +1,148 @@
 #!/bin/sh
+# Documentation
+#   Options:
+#       h|help    - help
+#       A|all     - add all the files
+#       f|file    - list of files to be added
+#       m|message - commit message
+#       p|push    - push
+#       n|no-push - push
+#       y|yes     - assume sensible defaults
+#
+#   Functionality:
+#       when no parametres are passed script does not execute
+#       -h and --help bring up help (as can be expected)
+#       -A and --all is equivalent to running git add -A or git add .
+#       -f and --file lists the files to be syncen
+#       -m and --message is the same as git commit -m, it stores the commit message
+#       -p and --push is push to a remote fter commiting (this behaviour is default)
+#       -n and no-push is the opposit of push and keeps the commit local
+#       -y and --yes is equivalent to git sync -A -p -m "Modified $files"
 
-# A POSIX variable
-OPTIND=1         # Reset in case getopts has been used previously in the shell.
 
-# Initialize our own variables:
-verbose=0
-silent=0
+
+
+
+
 message=""
-push=1
-all=0
-success_str="Sync complete. "
-file_list=""
-show_help() {
-	echo "Here be help"
-}
+files=""
 
-while getopts "Amlvhs:" opt; do
-    case "$opt" in
-    h)
-        show_help
-        exit 0
-        ;;
-    v)  verbose=1
-        ;;
-    A)  all=1
-        ;;
-    s) silent=1
-	;;
-    m)
-	message=$OPTARG
-	echo "Got this far"
-	echo $message
-	;;
-    l) push=0
-	;;
-    *) 
-        echo "invalid flag run git sync -h for help"
-    esac
+
+
+
+
+
+
+if [ -z "$1" ]; then
+    echo "Usage will be here later"
+    exit 1
+fi
+
+while [ -n "$1" ]; do # while loop starts
+
+	case "$1" in
+
+	-h|-\?)
+            echo "-h option passed"
+            if [ -n "$2" ]; then
+                echo "-h Does not take parameters and is incompatible with other options"
+                exit 1
+            fi
+
+            ;; # Message for -a option
+
+
+
+	-A|--all)
+            if [ -n "$2" ]; then
+                if [ "$(echo $2 | cut -c1-1)" != "-" ]; then
+                    echo "-A does not take options"
+                    exit 1
+                fi
+            fi
+
+            echo "-A option passed"
+
+
+            ;; # Message for -b option
+
+	-f|--file)
+            if [ -z "$2" ]; then
+                echo "-f requires a list of files"
+                exit 1
+            fi
+
+            if [ "$(echo $2 | cut -c1-1)" = "-" ]; then
+                echo "-f requires a list of files"
+                exit 1
+            fi
+
+            while [ -n "$2" ] && [ "$(echo $2 | cut -c1-1)" != "-" ]; do
+                files=$(echo "$files" "$2")
+                shift
+            done
+            echo "$files"
+
+            ;; # Message for -c option
+
+	-m|--message)
+            if [ -z "$2" ]; then
+                echo "-m requires a message"
+                exit 1
+            fi
+
+            if [ "$(echo $2 | cut -c1-1)" = "-" ]; then
+                echo "-m requires a message"
+                exit 1
+            fi
+
+            message="$2"
+            echo "-m option passed with message \"$message\""
+            shift
+
+            ;; # Message for -c option
+
+	-p|--push)
+            if [ -n "$2" ]; then
+                if [ "$(echo $2 | cut -c1-1)" != "-" ]; then
+                    echo "-p does not take options"
+                    exit 1
+                fi
+            fi
+
+            echo "-p option passed"
+
+            ;; # Message for -c option
+
+	-n|--no-push)
+            if [ -n "$2" ]; then
+                if [ "$(echo $2 | cut -c1-1)" != "-" ]; then
+                    echo "-n does not take options"
+                    exit 1
+                fi
+            fi
+
+            echo "-n option passed"
+            ;; # Message for -c option
+
+	-y|--yes)
+            if [ -n "$2" ]; then
+                if [ "$(echo $2 | cut -c1-1)" != "-" ]; then
+                    echo "-y does not take options"
+                    exit 1
+                fi
+            fi
+            echo "-y option passed"
+
+            ;; # Message for -c option
+
+	*)
+            echo "Option $1 not recognized"
+
+            ;; # Unknown option found
+
+	esac
+
+	shift
+
 done
-
-
-shift $((OPTIND-1))
-
-[ "${1:-}" = "--" ] && shift
-
-if [ $all = 0 ]
-then
-	if [ "$*" = "" ]
-	then
-		echo No files specified. Specify files to sync or sync all files with -A
-		exit 0
-	else
-	      file_list="$*"
-	fi
-fi
-
-do_the_sync_verbose() {
-
-if [ $all = 1 ]
-then
-	git add -A
-	success_str=$success_str "All files were added." 
-else
-	git add "$file_list"
-	success_str=$success_str "$file_list" "were added." 
-
-fi
-
-
-if [ ! $message = "" ]
-then
-	git commit -m "$message"
-	success_str="$success_str Added files were commited. "
-else
-	git commit
-	success_str="$success_str Added files were commited. "
-fi
-
-
-if [ $push = 1 ]
-then
-	git push
-	success_str="$success_str The commit was pushed to the remote."
-fi
-
-echo "$success_str"
-
-}
-
-do_the_sync_silent() {
-
-if [ $all = 1 ]
-then
-	git add -A 2> /dev/null
-	success_str="$success_str All files were added. "
-else
-	git add "$file_list" 2> /dev/null
-	success_str=$success_str "$file_list were added. "
-fi
-
-
-if [ ! $message = "" ]
-then
-	git commit -m "$message" 2> /dev/null
-	success_str="$success_str Added files were commited. "
-else
-	git commit
-	success_str="$success_str Added files were commited. "
-fi
-
-
-if [ $push = 1 ]
-then
-	git push 2> /dev/null
-	success_str="$success_str The commit was pushed to the remote."
-fi
-
-if [ $silent = 0 ]
-then
-	echo "$success_str"
-fi
-
-}
-
-if [ $verbose = 1 ]
-then
-    do_the_sync_verbose "$verbose" "$silent" "$message" "$has_message" "$push" "$all" "$success_str" "$file_list"
-else
-    do_the_sync_silent "$verbose" "$silent" "$message" "$has_message" "$push" "$all" "$success_str" "$file_list"
-fi
-

@@ -1,3 +1,3 @@
 # github-tools
 
-A set of bash scripts to ease the use of github on linux
+A set of shell scripts to help with the use of git
