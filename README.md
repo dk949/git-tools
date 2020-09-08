@@ -2,7 +2,7 @@
 
 A set of shell scripts to help with the use of git
 
-After being placed in a PATH directory these can be called without the hyphen, e.g. git view instead of git-view 
+After being placed in a PATH directory these can be called without the hyphen, e.g. git view instead of git-view
 
 
 ### List of Scripts and what they do
@@ -19,4 +19,4 @@ git clone https://github.com/dk949/git-tools/
 cd git-tools
 ./install
 ```
-Note: This is the default method and it assumes that ~/bin  exists, is on PATH and does not contain files namesd the same as files in this repo (if there are they will be removed). If you wish to install to a different drectory simply change the `cd ~/bin` portion of the install file to your desired directory.
+Note: This is the default method and it assumes that ~/bin  exists, is on PATH and does not contain files named the same as files in this repo (if there are they will be removed). If you wish to install to a different drectory simply change the `cd ~/bin` portion of the install file to your desired directory.
