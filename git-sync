@@ -165,5 +165,6 @@ fi
 
 
 if [ $push -gt 0 ]; then
+    git pull
     git push
 fi
