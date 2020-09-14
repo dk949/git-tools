@@ -6,7 +6,13 @@ failMsg() {
 
 CURRENT=$PWD
 GIT="$(git rev-parse --git-dir 2> /dev/null)" || failMsg
-GIT=$(cd "$GIT/.."; pwd)
-cd $GIT
-echo $([ -z ${CURRENT#$GIT} ] && echo $1 || echo ${CURRENT#$GIT}/$1) >> ./.gitignore
-cd $CURRENT
+GIT=$(cd "$GIT/.." || exit 1; pwd)
+cd "$GIT" || exit 1
+
+if [ -z "${CURRENT#$GIT}" ]; then
+    echo "$1" >> ./.gitignore
+else
+    echo "${CURRENT#$GIT}"/"$1" >> ./.gitignore
+fi
+
+cd "$CURRENT" || exit 1
