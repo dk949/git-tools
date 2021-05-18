@@ -18,6 +18,6 @@ After being placed in a PATH directory these can be called without the hyphen, e
 ```
 git clone https://github.com/dk949/git-tools/
 cd git-tools
-./make install
+make install
 ```
 Note: This is the default method and it assumes that $HOME/.local/bin  exists (it will be created if not) and is on PATH. If you wish to install to a different directory change `DESTDIR` and/or `PREFIX` variables in config.mk.
