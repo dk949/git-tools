@@ -7,12 +7,12 @@ After being placed in a PATH directory these can be called without the hyphen, e
 
 ### List of Scripts and what they do
 * git-create - Is under development, but should allow the user to create a local git repo and link it to a remote (github.com) in one command
-* git-ignore - Taks a file or directory name as the first and only argument and adds said file/directory to a .gitignore file in the root directory of the repository.
-* git-remind - Prints the dat of the last commit, commit message and which files changed (but no diffs).
-* git-rmsubmodule - Is also under construction but when finished will provide a simple way to remove a github submodile.
-* git-sync - depending on flags, adds, commits and/or pushes all/some of the files to local/remote repository
-* git-toolsconfig - related to git-create, and will most likely get delted soon
-* git-view - the most sumple script, it clears the screen and prints git status. I found myself using those two in sequence very often so they can now be invoked by one command
+* git-remind - Prints the date of the last commit, commit message and which files changed (but no diffs).
+* git-ignore - Takes a file or directory name as the first and only argument and adds said file/directory to a .gitignore file in the root directory of the repository.
+* git-rmsubmodule - Removes any previously added submodules, takes submodule name as an argument.
+* git-sync - depending on flags, adds, commits and/or pushes all/some of the files to local/remote repository, currently still being worked on.
+* git-toolsconfig - related to git-create, and will most likely get deleted soon
+* git-view - the most simple script, it clears the screen and prints git status. I found myself using those two in sequence very often so they can now be invoked by one command
 
 ### Installation
 ```
