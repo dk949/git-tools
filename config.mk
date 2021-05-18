@@ -1,1 +1,2 @@
 DESTDIR=${HOME}/.local
+PREFIX=
