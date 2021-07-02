@@ -12,6 +12,9 @@ install: all
 	install git-sync ${DESTDIR}${PREFIX}/bin/git-sync
 	install git-toolsconfig ${DESTDIR}${PREFIX}/bin/git-toolsconfig
 	install git-view ${DESTDIR}${PREFIX}/bin/git-view
+	install git-open-remote ${DESTDIR}${PREFIX}/bin/git-open-remote
+	install git-nuke ${DESTDIR}${PREFIX}/bin/git-nuke
+	install git-get-default ${DESTDIR}${PREFIX}/bin/git-get-default
 
 uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/vimv
@@ -22,5 +25,8 @@ uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/git-sync
 	rm -f ${DESTDIR}${PREFIX}/bin/git-toolsconfig
 	rm -f ${DESTDIR}${PREFIX}/bin/git-view
+	rm -f ${DESTDIR}${PREFIX}/bin/git-open-remote
+	rm -f ${DESTDIR}${PREFIX}/bin/git-nuke
+	rm -f ${DESTDIR}${PREFIX}/bin/git-get-default
 
 .PHONY: all clean install uninstall
