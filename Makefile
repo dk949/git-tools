@@ -15,6 +15,7 @@ install: all
 	install git-open-remote ${DESTDIR}${PREFIX}/bin/git-open-remote
 	install git-nuke ${DESTDIR}${PREFIX}/bin/git-nuke
 	install git-get-default ${DESTDIR}${PREFIX}/bin/git-get-default
+	install git-push-new ${DESTDIR}${PREFIX}/bin/git-push-new
 
 uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/vimv
@@ -28,5 +29,6 @@ uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/git-open-remote
 	rm -f ${DESTDIR}${PREFIX}/bin/git-nuke
 	rm -f ${DESTDIR}${PREFIX}/bin/git-get-default
+	rm -f ${DESTDIR}${PREFIX}/bin/git-push-new
 
 .PHONY: all clean install uninstall
