@@ -16,9 +16,9 @@ install: all
 	install git-nuke ${DESTDIR}${PREFIX}/bin/git-nuke
 	install git-get-default ${DESTDIR}${PREFIX}/bin/git-get-default
 	install git-push-new ${DESTDIR}${PREFIX}/bin/git-push-new
+	install git-delref ${DESTDIR}${PREFIX}/bin/git-delref
 
 uninstall:
-	rm -f ${DESTDIR}${PREFIX}/bin/vimv
 	rm -f ${DESTDIR}${PREFIX}/bin/git-create
 	rm -f ${DESTDIR}${PREFIX}/bin/git-ignore
 	rm -f ${DESTDIR}${PREFIX}/bin/git-remind
@@ -30,5 +30,6 @@ uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/git-nuke
 	rm -f ${DESTDIR}${PREFIX}/bin/git-get-default
 	rm -f ${DESTDIR}${PREFIX}/bin/git-push-new
+	rm -f ${DESTDIR}${PREFIX}/bin/git-delref
 
 .PHONY: all clean install uninstall
