@@ -17,6 +17,7 @@ install: all
 	install git-get-default ${DESTDIR}${PREFIX}/bin/git-get-default
 	install git-push-new ${DESTDIR}${PREFIX}/bin/git-push-new
 	install git-delref ${DESTDIR}${PREFIX}/bin/git-delref
+	install git-goback ${DESTDIR}${PREFIX}/bin/git-goback
 
 uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/git-create
@@ -31,5 +32,6 @@ uninstall:
 	rm -f ${DESTDIR}${PREFIX}/bin/git-get-default
 	rm -f ${DESTDIR}${PREFIX}/bin/git-push-new
 	rm -f ${DESTDIR}${PREFIX}/bin/git-delref
+	rm -f ${DESTDIR}${PREFIX}/bin/git-goback
 
 .PHONY: all clean install uninstall
