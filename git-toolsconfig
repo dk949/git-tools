@@ -1,7 +1,0 @@
-#!/bin/bash
-printf "Username: "
-read username
-printf "Token: "
-read token
-sed -i 's/username=/username='$username'/g' git-create
-sed -i 's/token=/token='$token'/g' git-create
