@@ -7,7 +7,7 @@ if [ $# = 1 ];then
     ___HEAD="HEAD"
 elif [ $# = 2 ];then
     ___FILE="$1"
-    ___HEAD="HEAD^$2"
+    ___HEAD="HEAD~$2"
 else
     echo "Usage: $0 [NUM_COMMITS(HEAD by default)]"
     exit 1
