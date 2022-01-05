@@ -8,8 +8,8 @@ too_many_opts(){
 
 USAGE="usage: git nuke [<options>]
 
-    -n, --no-checkout               do not checkout default branch (much faster, does not require internet)
-    -h, -?, --no-checkout           print this message
+    -n, --no-checkout       do not checkout default branch (much faster, does not require internet)
+    -h, -?, --help          print this message
     "
 
 if [ "$#" -eq 0 ]; then
