@@ -1,4 +1,8 @@
 #!/bin/sh
 
 clear
-git status
+if [ $# -eq 0 ]; then
+    git status .
+else
+    git status "$@"
+fi
