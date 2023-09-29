@@ -1,1 +1,1 @@
-git log --since="6am" --oneline
+git log-q --since="6am"
