@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ "$#" -ne 1 ]; then
-    echo "takes ref name as parameter"
+    echo "Usage: $(basename "$0") REF"
     exit 1
 fi
 
