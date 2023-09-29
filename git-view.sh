@@ -1,3 +1,3 @@
 #!/bin/sh
 clear
-git status
+git status "$@"
