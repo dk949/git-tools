@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[ -z "$BROWSER" ] && echo "BROWSER environment variable not set. Cannot open remote"
+
 if [ "$#" -ne 1 ]; then
     echo "remote origin"
     REMOTE_NAME="origin"
